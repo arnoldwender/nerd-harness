@@ -1,0 +1,28 @@
+#!/usr/bin/env sh
+# The first utterance of the Nerd Harness. Wire this as your harness startup
+# banner so it is the first thing emitted, before any agent acts.
+#   - A fixed boot line (the ethic) prints first.
+#   - Below it, a rotating "law of the craft" from laws.txt (codex-original).
+#     Edit laws.txt to curate or extend the deck. See LAWS.md.
+DIR=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+LAWS="$DIR/laws.txt"
+
+cat <<'EOF'
+
+  >_  THE NERD HARNESS
+
+      No gods, no gurus, no cargo cult.
+      Working code decides.
+EOF
+
+# --- Rotating law of the craft, from laws.txt ---
+if [ -f "$LAWS" ]; then
+  N=$(grep -c . "$LAWS")
+  if [ "$N" -gt 0 ]; then
+    DAY=$(date +%j | sed 's/^0*//')
+    [ -z "$DAY" ] && DAY=0
+    IDX=$(( (DAY % N) + 1 ))
+    L=$(sed -n "${IDX}p" "$LAWS")
+    [ -n "$L" ] && printf '\n  law of the craft #%03d — "%s"\n\n' "$IDX" "$L"
+  fi
+fi

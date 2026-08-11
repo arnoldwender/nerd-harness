@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+message: "If you use or adapt the Nerd Codex, please cite it."
+title: "The Nerd Codex"
+abstract: >-
+  A conduct codex for autonomous AI coding agents, skinned as the hacker ethic —
+  four disciplines (Leave It Hackable, Read the Source, No Cargo Cult, Finish the
+  Hack), each rule carrying an observable falsifier. Part of a small family of
+  conduct harnesses.
+type: dataset
+authors:
+  - family-names: Wender
+    given-names: Arnold
+version: "1.0"
+date-released: "2026-08-11"
+license: CC-BY-4.0
+repository-code: "https://github.com/arnoldwender/nerd-harness"
+keywords:
+  - AI agents
+  - agent harness
+  - conduct codex
+  - hacker ethic
+  - prompt engineering
+  - agent alignment
