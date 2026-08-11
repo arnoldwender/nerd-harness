@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/banner.png" alt="The Nerd Harness — a conduct codex for AI coding agents" width="100%">
+</p>
+
 # The Nerd Harness
 
 > A conduct codex for AI coding agents — four disciplines, no sermons, riding in the context window where the work actually happens. The build is the judge.
