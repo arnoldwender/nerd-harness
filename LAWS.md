@@ -1,14 +1,19 @@
 # The Laws of the Craft
 
-> The first utterance of the Nerd Harness: a fixed boot line, then a rotating *law of the*
+> The first utterance of the Nerd Harness: a fixed boot banner, then a rotating *law of the*
 > *craft* from the deck — codex-original aphorisms on debugging, humility, working code, and
 > finishing. No borrowed quotes, no attributed sages (where a line is genuine folklore, like
 > Murphy's Law, it is flagged as such and nothing more).
 
-## The boot line (fixed)
+## The boot banner (fixed)
+
+What [`bin/law`](bin/law) prints above the rotating law, unchanged every session:
 
 ```text
-No gods, no gurus, no cargo cult. Working code decides.
+  >_  THE NERD HARNESS
+
+      No gods, no gurus, no cargo cult.
+      Working code decides.
 ```
 
 ## The rotating law
