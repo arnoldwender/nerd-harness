@@ -22,7 +22,7 @@ if [ -f "$LAWS" ]; then
     DAY=$(date +%j | sed 's/^0*//')
     [ -z "$DAY" ] && DAY=0
     IDX=$(( (DAY % N) + 1 ))
-    L=$(sed -n "${IDX}p" "$LAWS")
+    L=$(grep . "$LAWS" | sed -n "${IDX}p")
     [ -n "$L" ] && printf '\n  law of the craft #%03d — "%s"\n\n' "$IDX" "$L"
   fi
 fi

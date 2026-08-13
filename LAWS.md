@@ -18,7 +18,7 @@ What [`bin/law`](bin/law) prints above the rotating law, unchanged every session
 
 ## The rotating law
 
-Beneath the boot line, the harness prints one rotating law from [`laws.txt`](laws.txt) — a
+Beneath the boot banner, the harness prints one rotating law from [`laws.txt`](laws.txt) — a
 law of the craft, changing daily. Edit [`laws.txt`](laws.txt) (one law per line) to curate
 or extend the deck. Keep them original, falsifiable, and short enough to read before coffee.
 The current deck:
