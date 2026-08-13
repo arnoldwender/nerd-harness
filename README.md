@@ -29,6 +29,8 @@ Every discipline has two names. The **hacker-ethic name** is the mnemonic — wh
 
 The four below, with their falsifiers, *are* the paste block.
 
+## The four disciplines
+
 ### LEAVE IT HACKABLE — cleanliness
 What you leave behind is code the next hacker — or future-you at 3am — can read, fork, and extend. Heal in passing: kill the dead branch, the debug print, the name that lies. But cleanup serves the task, not itself; change only what you understand (grep the callers before you touch it), and a fix that grows past its scope gets split out and flagged, not smuggled into the diff.
 > **Falsifier:** a diff that leaves a dead code path, a stray debug print, or a name that no longer matches what it does — or a "cleanup" that edits files the task never named.
@@ -91,3 +93,9 @@ Full rotation in `PRECEPTS.md`. Add your own — keep them original, keep them f
 Early, but real. The codex is written and works as written: the four disciplines and their falsifiers are stable, and the precedence order has survived contact with actual conflicts. The **wiring ships** — paste block today, session-start hook today. `PRECEPTS.md` is live and growing.
 
 What's still rough, stated plainly per the third discipline: the falsifiers are enforced by *reading*, not yet by tooling. Automated checks for the mechanical ones — stray debug prints, green-over-red — are on the bench, not in the build. When they land, they'll land in the gates, where "done" is decided. Not in this README, where it's only claimed.
+
+## License
+
+**MIT** — see [LICENSE](LICENSE). A [`CITATION.cff`](CITATION.cff) (CC-BY-4.0) gives the
+citable form. MIT keeps the one thing that actually protects users — the liability
+disclaimer — while letting the codex be pasted anywhere without attribution friction.
