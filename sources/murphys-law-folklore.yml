@@ -1,0 +1,44 @@
+# The one attribution this repo makes to a named person, and it is disputed.
+#
+# CODEX.md I.2 says: "Folklore (Murphy) says whatever can break silently will."
+# README.md and LAWS.md both promise that where a line is genuine folklore,
+# "like Murphy's Law, it is flagged as such and nothing more." This file is what
+# makes that promise checkable.
+#
+# WHAT IS SOLID (verified 2026-09-10):
+#   - Edward A. Murphy Jr., American aerospace engineer, 11 January 1918 to
+#     17 July 1990.
+#   - The law was named during USAF project MX981, the rocket-sled deceleration
+#     tests at Muroc Army Air Field (later Edwards AFB), 1948-1949.
+#
+# WHAT IS NOT (and this is why the file is marked unverified):
+#   The famous wording is not securely Murphy's. What Murphy is recorded as
+#   saying is defensive-design advice - "If there are two or more ways to do
+#   something and one of those results in a catastrophe, then someone will do it
+#   that way." The popular form, "Anything that can go wrong will go wrong",
+#   came out of the team: George E. Nichols said they condensed the remark to
+#   "If it can happen, it will happen" and named it mockingly, and project head
+#   John Stapp reformulated and popularised it at a press conference. Murphy's
+#   son Robert disputes that account and holds that his father coined it.
+#
+#   So there are two incompatible stories from named participants, and no
+#   document settles which. The repo is right to call it folklore. It would be
+#   wrong to call it a quotation, and this file records why.
+#
+# Nothing in this repo QUOTES Murphy. CODEX.md paraphrases the idea in the
+# repo's own words and labels the label. That is the correct handling of a
+# saying whose text nobody can pin down, and it is the reason no verbatim line
+# appears in `quotes` below.
+work: "Murphy's law - folklore attribution, wording disputed"
+author: "Edward A. Murphy Jr. (attribution disputed - see provenance_note)"
+author_born: 1918
+author_died: 1990
+year: 1949
+edition: "Named during USAF project MX981 rocket-sled tests at Muroc Army Air Field, 1948-1949. No contemporaneous written formulation survives; the wordings in circulation are later reconstructions by participants who disagree with one another."
+pd_status_us: "A short proverbial saying with no fixed authored text and no single documented publication. Not a copyrightable work in any form this repo uses; nothing is quoted from it here."
+pd_status_eu: "Same. Murphy died 1990, so any authored text of his would run to 2060 under EU life-plus-70 - which is precisely why this repo paraphrases the idea in its own words rather than quoting a wording it cannot source."
+source_url: "https://en.wikipedia.org/wiki/Murphy%27s_law"
+provenance: unverified
+provenance_note: "The person and the 1949 occasion are verified; the WORDING is not. Named participants give incompatible accounts: George E. Nichols credits the team with condensing Murphy's remark and Stapp with popularising it, while Murphy's son Robert credits his father. No contemporaneous document settles it. Recorded here as folklore with a disputed origin, which is exactly how README.md, LAWS.md and CODEX.md already present it. Deliberately carries no verbatim quote, because this repo does not quote one."
+quotes:
+  - "Folklore (Murphy) says whatever can break silently will"

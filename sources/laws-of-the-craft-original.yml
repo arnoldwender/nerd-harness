@@ -1,0 +1,60 @@
+# The deck itself. This is the entry that makes the repo's central citation
+# claim checkable rather than merely stated.
+#
+# README.md and LAWS.md both say the laws are "codex-original: no borrowed
+# quotes, no attributed sages." That is a claim about ABSENCE, and absence is
+# the hardest thing to evidence. Two measurements were taken on 2026-09-10:
+#
+#   1. The gate's own extractor was run over all five cited files. It found
+#      ZERO attributed quotations - not one line in this repo carries a name
+#      after a dash. That is the mechanical half: there is no sage to check.
+#   2. Exact-phrase web searches were run against the most quotable laws
+#      ("The bug is never where you're certain it is", "A green test that
+#      guards nothing", "Clever is code you write on Monday", "Blame the
+#      compiler last"). None returned a prior source. The claim survived the
+#      attempt to falsify it.
+#
+# ANCESTRY IS NOT AUTHORSHIP, and recording it here is the point of the file.
+# Several laws restate ideas that belong to somebody. The WORDINGS are original;
+# the THOUGHTS are not, and pretending otherwise would be its own small cargo
+# cult:
+#
+#   "Ninety percent done is the polite name for the easy half."
+#       -> the ninety-ninety rule, Tom Cargill of Bell Labs, popularised by Jon
+#          Bentley's September 1985 Programming Pearls column in CACM.
+#   "Blame the compiler last - it has been wrong far less often than you have."
+#       -> the long-standing "it is never a compiler bug" discipline; the same
+#          idea appears as "select() isn't broken" in The Pragmatic Programmer.
+#   "Rewrite it and you inherit every bug you forgot you already fixed."
+#       -> Joel Spolsky, Things You Should Never Do, Part I, 2000.
+#   "The manual costs ten minutes; skipping it costs the afternoon."
+#       -> RTFM, hacker folklore, no single author.
+#
+# None of those is quoted. If any law is ever replaced by an actual quotation,
+# it needs its own source file and this one stops covering it.
+work: "The Laws of the Craft, the rotating deck in laws.txt"
+author: "Arnold Wender"
+author_born: "not recorded - living author, and a birth year is not this repo's to publish"
+author_died: "not applicable - living author"
+year: 2026
+edition: "Original composition for this repository. Fourteen laws, one per line in laws.txt, documented in LAWS.md, emitted one per day by bin/law. First released 2026-08-11, per CITATION.cff."
+pd_status_us: "NOT public domain. Original 2026 work, published under this repository's MIT licence - see LICENSE. Reusable under those terms, which is not the same as unowned."
+pd_status_eu: "NOT public domain. Original 2026 work by a living author, published under this repository's MIT licence. EU copyright runs for the author's life plus 70 years."
+source_url: "laws.txt"
+provenance: verified
+provenance_note: "Verified as ORIGINAL, not as borrowed. Two measurements on 2026-09-10: the gate extractor found zero attributed quotations across all five cited files, and exact-phrase searches for the four most quotable laws returned no prior source. Documented ancestry of the ideas, none of it quoted, is listed in the header comment above. The source_url is the repo-relative path rather than a https link on purpose - for an original composition the file IS the primary source, and a github.com blob link would additionally return 404 to any anonymous reader for as long as this repository stays private, which the --online check correctly reported as a dead source."
+quotes:
+  - "The machine keeps no secrets and grants no benefit of the doubt - it runs what you actually wrote, and waits for you to notice the difference."
+  - "The bug is never where you're certain it is; certainty is exactly where it hides."
+  - "Read the error message as if it were telling the truth, because it is."
+  - "If you didn't run it, you don't know it works - you only hope it does."
+  - "A green test that guards nothing is a lie you tell yourself on a schedule."
+  - "Clever is code you write on Monday and cannot read by Friday."
+  - "You cannot fix what you cannot summon on command."
+  - "The manual costs ten minutes; skipping it costs the afternoon."
+  - "Ninety percent done is the polite name for the easy half."
+  - "When the debugger lies to you, print the truth and read it slowly."
+  - "Every line you're proud of is a bug you haven't been introduced to yet."
+  - "Blame the compiler last - it has been wrong far less often than you have."
+  - "Rewrite it and you inherit every bug you forgot you already fixed."
+  - "Done is earned by running it, not announced by feeling it."
