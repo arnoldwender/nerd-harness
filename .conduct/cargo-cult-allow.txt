@@ -1,0 +1,21 @@
+# no-cargo-cult allowlist
+#
+# Read by gate/no_cargo_cult.py. One entry per line; `#` starts a comment.
+#
+#     <check-id> <path glob>    silence that one check for matching paths
+#     <path glob>               silence every check for matching paths
+#
+# Paths are POSIX and relative to the target root, matched with fnmatch, so
+# `tests/*` and `**/legacy/*_test.py` both work.
+#
+# Check ids: surviving-mutant, empty-assertion, nondeterministic-test,
+#            orphan-snapshot, unpinned-dependencies, unparseable-test,
+#            unparseable-manifest
+#
+# An entry here is a decision, not a mute button. Say why, next to the line —
+# a silenced check with no reason is the ritual this gate is named after.
+#
+# Example:
+#   nondeterministic-test tests/test_clock_drift.py   # the drift IS the subject
+#
+# This repo has no entries: the gate runs clean on itself.
