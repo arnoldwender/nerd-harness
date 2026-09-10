@@ -1,0 +1,34 @@
+# Where the repo's third discipline gets its name.
+#
+# "No Cargo Cult" is the name of a whole pillar, it appears in the boot banner
+# bin/law prints on every session, and it names the gate
+# (gate/no_cargo_cult.py). A term carrying that much weight should say where it
+# came from, so that nobody later mistakes a borrowed term of art for an
+# invention of this repo - the mirror image of the failure the pool entry
+# guards against.
+#
+# Verified 2026-09-10: Richard Feynman (11 May 1918 - 15 February 1988) coined
+# "cargo cult science" in his commencement address at the California Institute
+# of Technology in June 1974. It was published as the final chapter of Surely
+# You're Joking, Mr. Feynman! (1985).
+#
+# NOTHING OF FEYNMAN'S IS QUOTED IN THIS REPO, and that is a deliberate line,
+# not an oversight. The 1974 address and the 1985 book are both in copyright in
+# both jurisdictions - Feynman died in 1988, so EU life-plus-70 runs to 2059,
+# and neither text is anywhere near the pre-1930 US threshold. The repo uses the
+# TERM, which is not protectable, and writes its own sentences about it. That is
+# why `quotes` below holds the repo's own wording and not his.
+work: "Cargo Cult Science - the origin of a term this repo uses as a discipline name"
+author: "Richard P. Feynman"
+author_born: 1918
+author_died: 1988
+year: 1974
+edition: "Commencement address, California Institute of Technology, June 1974. Published as the final chapter of Surely You're Joking, Mr. Feynman! (W. W. Norton, 1985)."
+pd_status_us: "NOT public domain. 1974 address, 1985 book - both far later than the pre-1930 US threshold. No text of Feynman's is reproduced in this repository."
+pd_status_eu: "NOT public domain. Feynman died 1988; 1988 plus 70 is 2058, so his work is protected in the EU until 2059. Only the term is used, and a short term of art is not protected by copyright."
+source_url: "https://en.wikipedia.org/wiki/Cargo_cult_science"
+provenance: verified
+provenance_note: "Recorded so the borrowed term is not mistaken for an original coinage. The origin is verified; no Feynman text is quoted anywhere in this repository, and the entries in `quotes` are the repo's own sentences about the term, not his."
+quotes:
+  - "the purest cargo cult in software is a test suite that performs the ritual without the substance"
+  - "No cargo cult names the exact failure of pasting a ritual you don't understand and calling it done."

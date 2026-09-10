@@ -1,6 +1,18 @@
 # The Nerd Harness runs its own falsifier on every push. A repo whose third
 # discipline is NO CARGO CULT cannot ship a suite it never checked for rituals.
 #
+# The citation gate runs here too. `scripts/check.py` proves the README quotes a
+# line the emitter really emits; it cannot tell whether that line was ever
+# written by the person it names. Four of the ten harnesses in this family
+# shipped fabricated citations, so gate/citations.py runs on every push.
+#
+# It is deliberately installed with NO pyyaml. The gate carries a stdlib
+# fallback parser for exactly the bare-container case, and CHECK 5 of this
+# repo's own gate says an unpinned dependency makes a verdict a property of the
+# day it ran. Adding one here to read three small files would break that rule
+# and leave the fallback path untested. Running without it exercises the path a
+# bare container actually takes.
+#
 # No step interpolates untrusted input into a shell. The only expressions here
 # are `github.workflow` / `github.ref` inside `concurrency:` and
 # `github.event_name` inside an `if:`. None of the three reaches a `run:`, and
@@ -47,6 +59,13 @@ jobs:
       - name: Self-check (the repo keeps its own promises)
         run: python3 scripts/check.py
 
+      - name: Citation gate (every attributed quotation traces to a source)
+        run: python3 gate/citations.py --sarif citations.sarif
+
+      - name: Citation gate, online (manual runs only)
+        if: github.event_name == 'workflow_dispatch'
+        run: python3 gate/citations.py --online
+
       - name: Tests
         run: python3 -m pytest tests/ -q
 
@@ -67,4 +86,12 @@ jobs:
         with:
           name: no-cargo-cult-sarif
           path: no-cargo-cult.sarif
+          if-no-files-found: ignore
+
+      - name: Upload citation SARIF
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: citations-sarif
+          path: citations.sarif
           if-no-files-found: ignore

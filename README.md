@@ -83,6 +83,8 @@ You don't toggle it. You let the stakes set the volume.
 
 Every session opens the same way: a fixed banner — non-negotiable — then one rotating **law of the craft**, drawn from the deck in [`laws.txt`](laws.txt) and documented in [`LAWS.md`](LAWS.md). The laws are codex-original: no borrowed quotes, no attributed sages. (Where a line is genuinely anonymous — Murphy's Law and its kin — it's flagged as folklore and nothing more.)
 
+That last paragraph is a claim about **absence**, which is the hardest kind to back, so it is measured rather than asserted — see [the provenance gate](#the-other-gate-provenance) and [`sources/`](sources/).
+
 This is [`bin/law`](bin/law) as it actually prints — the number and the law advance with the day, the banner never does:
 
 ```text
@@ -183,6 +185,26 @@ python3 tests/mutation_check.py                     # do those tests defend the 
 ```
 
 [`tests/mutation_check.py`](tests/mutation_check.py) is a mutation check on the mutation gate: it deletes each check in turn, runs the suite, and requires it to go red. A gate that holds other suites to that standard does not get an exemption from it. Silence a check deliberately in [`.conduct/cargo-cult-allow.txt`](.conduct/cargo-cult-allow.txt), one entry per line, with the reason next to it. CI wiring: [`.github/workflows/gate.yml`](.github/workflows/gate.yml).
+
+## The other gate: provenance
+
+[`scripts/check.py`](scripts/check.py) proves the README quotes a line the emitter really emits. It cannot tell you whether that line was ever written by the person named beside it. Four of the ten harnesses in this family shipped fabricated citations before anyone noticed — an invented sage is III.2, *invent nothing*, in its purest form, and it's the one lie the reader can't catch on their own.
+
+[`gate/citations.py`](gate/citations.py) closes it. Every attributed quotation in the README, [`LAWS.md`](LAWS.md), [`CODEX.md`](CODEX.md), [`codex-block.md`](codex-block.md) and [`EXAMPLE.md`](EXAMPLE.md) must resolve to a file in [`sources/`](sources/) carrying work, author, the author's dates, year, per-jurisdiction public-domain status and a source URL. Miss any field and it fails, because a quotation isn't sourced until **someone who isn't us** can check it. Exit `0` clean · `1` findings · `2` the gate itself failed — the family contract.
+
+Here it does something slightly different from its siblings, because this repo has no sages to check:
+
+```text
+$ python3 gate/citations.py
+citations: 3 source file(s), 0 attributed quotation(s)
+  every attributed quotation traces to a source with checkable provenance
+```
+
+**Zero is the finding.** The extractor read all five cited files and found not one line carrying a name after a dash. That's the mechanical half of "no borrowed quotes, no attributed sages" — measured, not claimed. The other half was an attempt to falsify it: exact-phrase searches for the four most quotable laws, none of which returned a prior source. Both measurements are recorded in [`sources/laws-of-the-craft-original.yml`](sources/laws-of-the-craft-original.yml), along with the part that would be easy to leave out — the **ancestry** of several laws. *"Ninety percent done is the polite name for the easy half"* is an original wording of Tom Cargill's ninety-ninety rule; the rewrite law restates Spolsky. The wordings are ours. The thoughts aren't, and saying so is the whole discipline.
+
+The other two files cover the two borrowed things this repo does use: [Murphy](sources/murphys-law-folklore.yml), marked `unverified` because named participants tell incompatible stories about who actually phrased it, and [Feynman](sources/feynman-cargo-cult-science.yml), who coined *cargo cult science* at Caltech in 1974 — recorded so a borrowed term of art is never mistaken for our coinage. Neither file quotes either man. Both texts are in copyright in both jurisdictions, which is precisely why this repo uses the idea and writes its own sentences.
+
+It runs on every push, with **no `pyyaml`** — the gate carries a stdlib fallback parser, and CHECK 5 above says an unpinned dependency makes a verdict a property of the day it ran. Adding one to read three small files would break that rule and leave the fallback untested.
 
 ## Status
 
