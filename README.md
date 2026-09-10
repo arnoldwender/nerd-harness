@@ -71,6 +71,7 @@ And it's un-preachy by construction. There's no virtue here you can't falsify. E
 
 - **Paste the block.** Drop the contents of [`codex-block.md`](codex-block.md) into the instructions your agent already reads — `AGENTS.md`, `CLAUDE.md`, a system prompt, a project rules file, whatever your harness loads. It is the single source the hook and your agent file share.
 - **Or wire the hook.** [`hooks/session-start.sh`](hooks/session-start.sh) emits the first word and the conduct block at the top of every session — see [hooks/](hooks/). Wire it once and it loads itself; you stop thinking about it.
+- **Run the gate on your own suite.** [`gate/no_cargo_cult.py`](gate/no_cargo_cult.py) takes `--target` and points at any repo, not just this one. It is stdlib Python 3.11+, no install. See [the gate](#the-gate-a-test-that-defends-nothing) for what it does and, just as importantly, what it doesn't.
 - **Read the long form if you want the rest.** [`CODEX.md`](CODEX.md) is the whole codex — four disciplines, sixteen rules, a falsifier on each — and [`EXAMPLE.md`](EXAMPLE.md) runs one failing test through it twice, with and without, so you can watch the discipline change the diff.
 - **Always active; intensity scales with the stakes.** There's no "enable discipline" switch, the same way there's no switch for caring whether the code works. What *scales* is intensity, to match the blast radius:
   - **Throwaway script in a scratch dir** — the disciplines are still on, but the falsifiers rarely fire. There's little to leave hackable and nothing worth cargo-culting.
@@ -111,11 +112,83 @@ A few more from the deck, so you can hear the range:
 
 Full rotation in [`LAWS.md`](LAWS.md); the deck itself is [`laws.txt`](laws.txt), one law per line — edit it to curate or extend. Add your own — keep them original, keep them falsifiable, keep them short enough to read before coffee.
 
+## The gate: a test that defends nothing
+
+The third discipline is named NO CARGO CULT, and the purest cargo cult in software is a test suite that performs the ritual without the substance. [`gate/no_cargo_cult.py`](gate/no_cargo_cult.py) asks a suite the one question it cannot answer about itself:
+
+> **If I delete the implementation, does anything go red?**
+
+If the answer is no, that suite is a ceremony on a schedule. Mutation is how you find out, and there is no cheaper way.
+
+This is the run against this repo, unbounded, as it actually prints — the interpreter path and the repo path elided, nothing else:
+
+```text
+$ python3 gate/no_cargo_cult.py --max-mutants 50
+no-cargo-cult: /…/nerd-harness
+  2 test file(s), 26 mutation candidate(s)
+  mutation via `…/python3 -m pytest -q -p no:cacheprovider` (baseline 3.9s): 26 mutated, 26 killed, 0 survived
+  no ritual found: every mutant died and every assertion can fail
+```
+
+The default is `--max-mutants 10`, and at that setting the last two lines read differently — sixteen candidates go to a `NOT MEASURED` line and the closing line stops claiming the suite is defended. That is deliberate: exit 0 means "no findings", never "fully measured".
+
+### The five checks
+
+| # | Check | What it catches | How it decides |
+| --- | --- | --- | --- |
+| 1 | `surviving-mutant` | a function the tests name but nothing defends | replaces the body with `raise NotImplementedError`, runs the suite, and requires it to go **red** |
+| 2 | `empty-assertion` | `assert True`, `expect(true).toBe(true)`, a test with no assertion at all, a test that only prints | Python through `ast`; JavaScript through line patterns plus a per-file "declares tests, contains no assertion" scan |
+| 3 | `nondeterministic-test` | `random.random()`, `datetime.now()`, `Math.random()`, `Date.now()` in a test with no seed and no frozen clock | `ast` for Python, so a pattern quoted inside a string is data, not a call |
+| 4 | `orphan-snapshot` | a `.snap` / `.ambr` stored in the repo that no test ever compares against | resolves the companion test by name, then falls back to the whole suite |
+| 5 | `unpinned-dependencies` | `package.json` with no lockfile; `pyproject.toml` / `requirements.txt` with an open upper bound and no lock | a suite whose dependency set is free to move gives a verdict that is a property of the day |
+
+Exit codes are the contract the conduct-harness family shares: **0** clean, **1** findings, **2** the gate itself failed. The third is not decoration — a checker that returns 0 when it crashed fails *open*, which is the one thing this repo's third discipline never trades.
+
+Findings go to stdout and, with `--sarif PATH`, to SARIF 2.1.0. Point it at any repo with `--target`; the suite command is autodetected (pytest / vitest / jest / `npm test`) and overridable with `--test-cmd`.
+
+### What it costs
+
+Mutation is expensive by construction: **one full suite run per mutant, plus one for the baseline.** On this repo that is roughly 4 seconds each — 20 seconds for the bounded run CI uses on every push, 80 seconds for the weekly unbounded one. `--max-mutants N` (default 10) buys the time back by measuring less, and the gate **says so out loud** on a `NOT MEASURED` line rather than printing a clean summary over an unmeasured half.
+
+Checks 2 to 5 are static and cost nothing.
+
+The gate mutates files **in place**, because a suite has to run against its real tree to mean anything. So the restore is treated as the dangerous part it is: the original is held in memory *and* copied to `<file>.no-cargo-cult.bak` before the first byte changes, `SIGINT`/`SIGTERM` restore before they re-raise, the restore happens in a `finally` and is then verified byte for byte, and a failed restore is exit 2. `git checkout` is never used to undo a mutation — the target may hold uncommitted work, and a checkout would take that work with it.
+
+### What it does NOT do
+
+Per the third discipline, the gaps get named rather than glossed:
+
+- **Mutation is Python only.** It goes through `ast` and re-`compile()`s the result, so the suite never sees a file that fails to parse. A regex mutation of JavaScript would sometimes produce one, the suite would go red for the wrong reason, and the gate would score that as a killed mutant — a false **pass**, the one failure mode it must not have. For a JS/TS target the mutation phase reports itself as `NOT MEASURED` and the other four checks still run.
+- **"Covered by tests" is a claim, not a measurement.** The gate carries no dependencies, so it cannot read a coverage database. A module qualifies when the suite names it by path, by filename, or in an import — a promise, not a mention. Prose is stripped out: docstrings and comments talk *about* files, and reading that as coverage is how this gate reported twelve phantom findings against `scripts/check.py` on its second run.
+- **A skipped test is not flagged.** `@pytest.mark.skip` and `it.skip` are the other half of the IV.3 falsifier and this gate does not look for them yet.
+- **`scripts/check.py` has no tests of its own.** The gate is honest enough to say so here, since its own rules keep it from reporting it as a finding.
+
+### Which pillars this automates
+
+[`CODEX.md`](CODEX.md) carries sixteen rule falsifiers. This gate mechanises **two of them, and neither one completely**:
+
+- **III.1 — "the report says 'working' or 'passing' for something that isn't."** Only in the one form a machine can see: a green that does not depend on the code. It says nothing about the *report itself* — a fabricated flag, number or benchmark in a summary is exactly as invisible to this gate as it was before, and that is the discipline's hardest case.
+- **IV.3 — "a test passes only because it was skipped, weakened, or had its assertion deleted."** The *weakened* and *deleted* halves. Not the skipped one.
+
+The other fourteen are untouched. All four of **I · LEAVE IT HACKABLE** — nothing here reads a diff, so a stray debug print or a lying name still gets caught by a human or not at all. All four of **II · READ THE SOURCE** — a gate cannot see what you did not read. Three of four in III, three of four in IV. Those are enforced by reading, and this section is the only place in the repo that says which is which.
+
+### Running it
+
+```sh
+python3 gate/no_cargo_cult.py                       # this repo
+python3 gate/no_cargo_cult.py --target ../some-repo # any other
+python3 gate/no_cargo_cult.py --sarif out.json --max-mutants 4
+python3 -m pytest tests/ -q                         # 43 tests, one per rule and per false positive
+python3 tests/mutation_check.py                     # do those tests defend the gate?
+```
+
+[`tests/mutation_check.py`](tests/mutation_check.py) is a mutation check on the mutation gate: it deletes each check in turn, runs the suite, and requires it to go red. A gate that holds other suites to that standard does not get an exemption from it. Silence a check deliberately in [`.conduct/cargo-cult-allow.txt`](.conduct/cargo-cult-allow.txt), one entry per line, with the reason next to it. CI wiring: [`.github/workflows/gate.yml`](.github/workflows/gate.yml).
+
 ## Status
 
 Early, but real. The codex is written and works as written: the four disciplines and their falsifiers are stable, and the precedence order has survived contact with actual conflicts. The **wiring ships** — paste block today, session-start hook today. [`LAWS.md`](LAWS.md) is live and growing.
 
-What's still rough, stated plainly per the third discipline: the falsifiers are enforced by *reading*, not yet by tooling. Automated checks for the mechanical ones — stray debug prints, green-over-red — are on the bench, not in the build. When they land, they'll land in the gates, where "done" is decided. Not in this README, where it's only claimed.
+What's rough, stated plainly per the third discipline: **two of the codex's sixteen rule falsifiers are now enforced by tooling, neither of them completely, and the other fourteen are not enforced at all.** The green-that-guards-nothing case ships in [`gate/no_cargo_cult.py`](gate/no_cargo_cult.py) and runs in CI on every push. Stray debug prints, dead code, lying names, forced commands, invented numbers in a report, abandoning a turn at the first error — all still enforced by *reading*. [The gate section](#which-pillars-this-automates) says exactly which is which. Anything not listed there is a claim, not a build step.
 
 ## License
 

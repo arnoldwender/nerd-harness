@@ -4,3 +4,12 @@ node_modules/
 
 # Keep the repo's own assets/ tracked despite the case-insensitive global /Assets/ ignore (macOS)
 !/assets/
+
+# Emergency copies the mutation gate writes before it changes a byte, and removes
+# after it verifies the restore. One surviving here means a run was killed mid-flight:
+# put it back over the original by hand.
+*.no-cargo-cult.bak
+
+# pytest / import caches
+__pycache__/
+.pytest_cache/

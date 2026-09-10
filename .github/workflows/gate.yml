@@ -1,0 +1,70 @@
+# The Nerd Harness runs its own falsifier on every push. A repo whose third
+# discipline is NO CARGO CULT cannot ship a suite it never checked for rituals.
+#
+# No step interpolates untrusted input into a shell. The only expressions here
+# are `github.workflow` / `github.ref` inside `concurrency:` and
+# `github.event_name` inside an `if:`. None of the three reaches a `run:`, and
+# none of them carries attacker-controlled text.
+name: gate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    # Weekly, unbounded. Mutation costs one full suite run per mutant, so every
+    # push measures a slice and this run measures all of it. Which one you got
+    # is printed either way — see the NOT MEASURED lines.
+    - cron: "0 6 * * 1"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  no-cargo-cult:
+    name: no-cargo-cult gate
+    runs-on: ubuntu-latest
+    # Mutation is the expensive check by construction: N+1 suite runs. Measured
+    # on a laptop at roughly 20s for the bounded run and 80s for the full one.
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      # Pinned, because CHECK 5 of this very gate says an unpinned dependency
+      # makes the verdict a property of the day it ran.
+      - name: Install
+        run: python -m pip install --upgrade pip "pytest==9.0.3"
+
+      - name: Self-check (the repo keeps its own promises)
+        run: python3 scripts/check.py
+
+      - name: Tests
+        run: python3 -m pytest tests/ -q
+
+      - name: Mutation check (do the tests defend the gate?)
+        run: python3 tests/mutation_check.py
+
+      - name: No-cargo-cult gate, bounded
+        if: github.event_name != 'schedule'
+        run: python3 gate/no_cargo_cult.py --sarif no-cargo-cult.sarif --max-mutants 4
+
+      - name: No-cargo-cult gate, every candidate (scheduled runs only)
+        if: github.event_name == 'schedule'
+        run: python3 gate/no_cargo_cult.py --sarif no-cargo-cult.sarif --max-mutants 200
+
+      - name: Upload SARIF
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: no-cargo-cult-sarif
+          path: no-cargo-cult.sarif
+          if-no-files-found: ignore
