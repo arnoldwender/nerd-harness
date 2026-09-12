@@ -72,6 +72,9 @@ jobs:
       - name: Mutation check (do the tests defend the gate?)
         run: python3 tests/mutation_check.py
 
+      - name: Mutation check (do the tests defend the citation gate?)
+        run: python3 tests/mutation_check_citations.py
+
       - name: No-cargo-cult gate, bounded
         if: github.event_name != 'schedule'
         run: python3 gate/no_cargo_cult.py --sarif no-cargo-cult.sarif --max-mutants 4
