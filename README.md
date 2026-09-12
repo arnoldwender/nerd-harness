@@ -127,12 +127,14 @@ This is the run against this repo, unbounded, as it actually prints — the inte
 ```text
 $ python3 gate/no_cargo_cult.py --max-mutants 50
 no-cargo-cult: /…/nerd-harness
-  2 test file(s), 26 mutation candidate(s)
-  mutation via `…/python3 -m pytest -q -p no:cacheprovider` (baseline 3.9s): 26 mutated, 26 killed, 0 survived
+  4 test file(s), 37 mutation candidate(s)
+  mutation via `…/python3 -m pytest -q -p no:cacheprovider` (baseline 15.8s): 37 mutated, 37 killed, 0 survived
   no ritual found: every mutant died and every assertion can fail
 ```
 
-The default is `--max-mutants 10`, and at that setting the last two lines read differently — sixteen candidates go to a `NOT MEASURED` line and the closing line stops claiming the suite is defended. That is deliberate: exit 0 means "no findings", never "fully measured".
+The default is `--max-mutants 10`, and at that setting the last two lines read differently — twenty-seven candidates go to a `NOT MEASURED` line and the closing line stops claiming the suite is defended. That is deliberate: exit 0 means "no findings", never "fully measured".
+
+That bound is not a formality. On 2026-09-12 the bounded run in CI was green while the unbounded run reported one survivor: `check_urls_online`, the citation gate's `--online` check, which the suite named and never exercised — it lives behind a flag no test passed. Four tests now drive it against a server on loopback rather than the network, and the line above went from 36 killed of 37 to 37 of 37. **The gate found a real hole in its own repo, in the half of the candidates CI does not reach.** Which is the argument for the scheduled unbounded run, and against reading a bounded exit 0 as "defended".
 
 ### The five checks
 
@@ -180,8 +182,9 @@ The other fourteen are untouched. All four of **I · LEAVE IT HACKABLE** — not
 python3 gate/no_cargo_cult.py                       # this repo
 python3 gate/no_cargo_cult.py --target ../some-repo # any other
 python3 gate/no_cargo_cult.py --sarif out.json --max-mutants 4
-python3 -m pytest tests/ -q                         # 43 tests, one per rule and per false positive
+python3 -m pytest tests/ -q                         # 90 tests, one per rule and per false positive
 python3 tests/mutation_check.py                     # do those tests defend the gate?
+python3 tests/mutation_check_citations.py           # and the citation gate? (9 mutants)
 ```
 
 [`tests/mutation_check.py`](tests/mutation_check.py) is a mutation check on the mutation gate: it deletes each check in turn, runs the suite, and requires it to go red. A gate that holds other suites to that standard does not get an exemption from it. Silence a check deliberately in [`.conduct/cargo-cult-allow.txt`](.conduct/cargo-cult-allow.txt), one entry per line, with the reason next to it. CI wiring: [`.github/workflows/gate.yml`](.github/workflows/gate.yml).
