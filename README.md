@@ -204,7 +204,9 @@ citations: 3 source file(s), 0 attributed quotation(s)
 
 The other two files cover the two borrowed things this repo does use: [Murphy](sources/murphys-law-folklore.yml), marked `unverified` because named participants tell incompatible stories about who actually phrased it, and [Feynman](sources/feynman-cargo-cult-science.yml), who coined *cargo cult science* at Caltech in 1974 — recorded so a borrowed term of art is never mistaken for our coinage. Neither file quotes either man. Both texts are in copyright in both jurisdictions, which is precisely why this repo uses the idea and writes its own sentences.
 
-It runs on every push, with **no `pyyaml`** — the gate carries a stdlib fallback parser, and CHECK 5 above says an unpinned dependency makes a verdict a property of the day it ran. Adding one to read three small files would break that rule and leave the fallback untested.
+It runs on every push, with **no `pyyaml`** — the citation gate parses `sources/*.yml` with a parser it ships itself, and CHECK 5 above says an unpinned dependency makes a verdict a property of the day it ran. Adding one to read three small files would break that rule.
+
+That stance used to be this repo's alone, and it was the right one. Six of the ten editions installed `pyyaml` while four did not, and the gate preferred the library when it found it — so the same gate over the same file gave different answers depending on the repo, and a `sources/` entry using a construct only the library reads passed in six and failed in four. It failed in a published one. **This repo's own gate is what surfaced the cause:** `no_cargo_cult` flagged the library branch as a surviving mutant, correctly, because in a container without `pyyaml` that branch is unreachable and no test can defend code that never runs. The branch is gone; there is one parser now, everywhere.
 
 ## Status
 

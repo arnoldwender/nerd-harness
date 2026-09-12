@@ -6,12 +6,18 @@
 # written by the person it names. Four of the ten harnesses in this family
 # shipped fabricated citations, so gate/citations.py runs on every push.
 #
-# It is deliberately installed with NO pyyaml. The gate carries a stdlib
-# fallback parser for exactly the bare-container case, and CHECK 5 of this
-# repo's own gate says an unpinned dependency makes a verdict a property of the
-# day it ran. Adding one here to read three small files would break that rule
-# and leave the fallback path untested. Running without it exercises the path a
-# bare container actually takes.
+# It is deliberately installed with NO pyyaml. The citation gate parses
+# sources/*.yml with a parser it ships itself, and CHECK 5 of this repo's own
+# gate says an unpinned dependency makes a verdict a property of the day it ran.
+# Adding one here to read three small files would break that rule.
+#
+# This used to be the odd position in the family: six of the ten editions
+# installed pyyaml, the gate preferred the library when it found it, and the
+# same gate over the same file therefore answered differently depending on the
+# repo. This repo's own no_cargo_cult gate is what surfaced it, by flagging the
+# library branch as a surviving mutant — correct, because in a container without
+# pyyaml that branch is unreachable, and no test defends code that never runs.
+# The branch is gone. One parser, every environment.
 #
 # No step interpolates untrusted input into a shell. The only expressions here
 # are `github.workflow` / `github.ref` inside `concurrency:` and
