@@ -180,6 +180,14 @@ Per the third discipline, the gaps get named rather than glossed:
 
 The other fourteen are untouched. All four of **I · LEAVE IT HACKABLE** — nothing here reads a diff, so a stray debug print or a lying name still gets caught by a human or not at all. All four of **II · READ THE SOURCE** — a gate cannot see what you did not read. Three of four in III, three of four in IV. Those are enforced by reading, and this section is the only place in the repo that says which is which.
 
+### Why there is no live hook here
+
+Every other edition in this family now runs its gate a second time, as a Claude Code hook — before a `Bash`, `Edit` or `Write` lands, or when the agent's turn ends — so the finding reaches the agent while it can still act on it. This edition does not, and the reason is the gate, not a gap in the wiring.
+
+CHECK 1 mutates files **in place** and runs the whole suite once per mutant: roughly four seconds each on this repo, minutes on a real one. A `PreToolUse` hook has a budget of seconds and must never rewrite the tree the agent is in the middle of editing. A `Stop` hook could afford the time, but it would be mutating and restoring source files underneath a session that may already have started its next edit — the race the restore logic in that check is built to survive, not one to invite on every turn. Checks 2 to 5 are static and cheap, but they read the whole target rather than a diff, so a hook running them at every turn would report the repository's existing debt every time, which is the false-positive shape that gets a hook uninstalled.
+
+What would fit — the empty-assertion and non-determinism checks, run on the one test file an `Edit` or `Write` is about to change, judged as a before/after delta — is named here as not done, rather than described as if it were a plan. Until it exists, the live falsifier for NO CARGO CULT is CI on every push, with the weekly unbounded run behind it.
+
 ### Running it
 
 ```sh
