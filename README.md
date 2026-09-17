@@ -73,6 +73,10 @@ And it's un-preachy by construction. There's no virtue here you can't falsify. E
 - **Or wire the hook.** [`hooks/session-start.sh`](hooks/session-start.sh) emits the first word and the conduct block at the top of every session — see [hooks/](hooks/). Wire it once and it loads itself; you stop thinking about it.
 - **Run the gate on your own suite.** [`gate/no_cargo_cult.py`](gate/no_cargo_cult.py) takes `--target` and points at any repo, not just this one. It is stdlib Python 3.11+, no install. See [the gate](#the-gate-a-test-that-defends-nothing) for what it does and, just as importantly, what it doesn't.
 - **Read the long form if you want the rest.** [`CODEX.md`](CODEX.md) is the whole codex — four disciplines, sixteen rules, a falsifier on each — and [`EXAMPLE.md`](EXAMPLE.md) runs one failing test through it twice, with and without, so you can watch the discipline change the diff.
+- **Or install it as an Agent Skill.** [`SKILL.md`](SKILL.md) packages the same block in the
+  [Agent Skills](https://agentskills.io/specification) format: clone this repository into your
+  agent's skills directory as `nerd-harness/` (the directory name must match the skill name).
+  Verified on Claude Code 2.1.273 (2026-09-17); other hosts that read the format were not run.
 - **Always active; intensity scales with the stakes.** There's no "enable discipline" switch, the same way there's no switch for caring whether the code works. What *scales* is intensity, to match the blast radius:
   - **Throwaway script in a scratch dir** — the disciplines are still on, but the falsifiers rarely fire. There's little to leave hackable and nothing worth cargo-culting.
   - **Shared library, live service, anything with users downstream** — full weight. Read the source twice, force nothing, report every crack.
